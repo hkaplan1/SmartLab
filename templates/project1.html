@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project | 1</title>
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+    <!-- <script src="{{url_for('static', filename='js/script.js')}}"></script> -->
+  </head>
+<body>
+  <h1>You have chosen Project 1.</h1>
+  <h2>When you are ready to begin, choose step 1 and click submit. After each step do the same with the next step.</h2>
+  <div>
+    {% for i in range(project_data|length) %}
+      {% if i > 0 %}
+        <button onclick="postForms({{i}})" type="submit" name="args" value="{{i}}">Step {{i+1}}</button>
+
+        <p hidden id='device_id{{i-1}}'>{{project_data[i-1]['device_id']}}</p>
+        <p hidden id='function{{i-1}}' >{{project_data[i-1]['function']}}</p>
+        <p hidden id='device_id{{i}}' >{{project_data[i]['device_id']}}</p>
+        <p hidden id='function{{i}}' >{{project_data[i]['function']}}</p>
+
+      {% else %}
+        <form action="https://api.particle.io/v1/devices/{{project_data[0]['device_id']}}/{{project_data[0]['function']}}?access_token={{access_key}}" method="POST">
+          <input type="submit" name="args" value="on">Step {{i+1}}
+        </form>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <script>
+    function postForms(step){
+      var step = step.toString();
+      var stepPrev = (step-1).toString();
+      var id1="device_id"+step;
+      console.log(id1);
+      console.log(typeof id1);
+      var id2 = "function"+step;
+      var id3= "device_id"+stepPrev;
+      var id4 = "function"+stepPrev;
+      var device_id = document.getElementById(id1).innerText;
+      var funct = document.getElementById(id2).innerText;
+      var device_idPrev = document.getElementById(id3).innerText;
+      var functPrev = document.getElementById(id4).innerText;
+      $.ajax({
+        type: 'POST',
+        url: "https://api.particle.io/v1/devices/"+device_idPrev+"/"+functPrev,
+        data: {
+          access_token:"{{access_key}}",
+          arg:"off"},
+        success: function(data, status, xhr){
+          console.log("ok")
+        },
+        error: function(xhr, status, err) {
+          console.log("error")
+        }
+      });
+      $.ajax({
+        type: 'POST',
+        url: "https://api.particle.io/v1/devices/"+device_id+"/"+funct,
+        data: {
+          access_token:"{{access_key}}",
+          arg:"on"},
+        success: function(data, status, xhr){
+          console.log("ok")
+        },
+        error: function(xhr, status, err) {
+          console.log("error")
+        }
+      });
+
+    };
+  </script>
+
+
+</body>
+</html>
