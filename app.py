@@ -37,7 +37,7 @@ def home():
 @app.route('/projects/', defaults={'project': 1})
 @app.route('/projects/<int:project>')
 def show_users(project):
-    return render_template('project1.html',
+    return render_template('projects.html',
         access_key=access_key,
         project_data = projectData[project]
     )

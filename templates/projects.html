@@ -11,19 +11,25 @@
     <title>SmartLab</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Plugin CSS -->
-    <link href="static/vendor/magnific-popup/magnific-popup.css" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='vendor/magnific-popup/magnific-popup.css')}}" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
-    <link href="static/css/freelancer.min.css" rel="stylesheet">
-    <link href="static/css/custom.css" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/freelancer.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/custom.css')}}" rel="stylesheet">
+
+    <script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='js/script.js')}}"></script>
 
   </head>
 
@@ -51,9 +57,9 @@
     </nav>
 
     <!-- Header -->
-    <header class="masthead bg-primary text-white text-center">
+    <!-- <header class="masthead bg-primary text-white text-center">
       <div class="container">
-        <img class="img-fluid mb-5 d-block mx-auto" src="static/img/profile.png" alt="">
+        <img class="img-fluid mb-5 d-block mx-auto" src="{url_for('static', filename='img/profile.png')}}" alt="">
         <h1 class="text-uppercase mb-0">SmartLab</h1>
         <hr class="star-light">
         <h2 class="font-weight-light mb-0">Choose a Project to get Started!</h2>
@@ -63,32 +69,44 @@
           </form>
         {% endfor %}
       </div>
-    </header>
+    </header> -->
 
     <!-- Portfolio Grid Section -->
     <section class="portfolio" id="portfolio">
       <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">Portfolio</h2>
+        <h2 class="text-center text-uppercase text-secondary mb-0">{{project_data[0]['name']}}</h2>
         <hr class="star-dark mb-5">
         <div class="row">
           <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">
+            <form action="https://api.particle.io/v1/devices/{{project_data[1]['device_id']}}/{{project_data[1]['function']}}?access_token={{access_key}}" method="POST">
+              <button type="submit" name="args" value="on">Start Here!</button>
+            </form>
+            <!-- <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">
               <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
                 <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/cabin.png" alt="">
-            </a>
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/cabin.png')}}" alt=""> -->
+            <!-- </a> -->
           </div>
+          {% for i in range(2,project_data|length) %}
           <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-2">
+              <button onclick="postForms({{i}})" type="submit" name="args" value="{{i}}">Step {{i}}</button>
+
+              <p hidden id='device_id{{i-1}}'>{{project_data[i-1]['device_id']}}</p>
+              <p hidden id='function{{i-1}}' >{{project_data[i-1]['function']}}</p>
+              <p hidden id='device_id{{i}}' >{{project_data[i]['device_id']}}</p>
+              <p hidden id='function{{i}}' >{{project_data[i]['function']}}</p>
+          </div>
+          {% endfor %}
+            <!-- <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-2">
               <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
                 <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/cake.png" alt="">
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/cake.png')}}" alt="">
             </a>
           </div>
           <div class="col-md-6 col-lg-4">
@@ -98,7 +116,7 @@
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/circus.png" alt="">
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/circus.png')}}" alt="">
             </a>
           </div>
           <div class="col-md-6 col-lg-4">
@@ -108,7 +126,7 @@
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/game.png" alt="">
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/game.png')}}" alt="">
             </a>
           </div>
           <div class="col-md-6 col-lg-4">
@@ -118,7 +136,7 @@
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/safe.png" alt="">
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/safe.png')}}" alt="">
             </a>
           </div>
           <div class="col-md-6 col-lg-4">
@@ -128,9 +146,9 @@
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="static/img/portfolio/submarine.png" alt="">
+              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/submarine.png')}}" alt="">
             </a>
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -269,19 +287,19 @@
 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="static/vendor/jquery/jquery.min.js"></script>
-    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
+    <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="static/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+    <script src="{{url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+    <script src="{{url_for('static', filename='vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="static/js/jqBootstrapValidation.js"></script>
-    <script src="static/js/contact_me.js"></script>
+    <script src="{{url_for('static', filename='js/jqBootstrapValidation.js')}}"></script>
+    <script src="{{url_for('static', filename='js/contact_me.js')}}"></script>
 
     <!-- Custom scripts for this template -->
-    <script src="static/js/freelancer.min.js"></script>
+    <script src="{{url_for('static', filename='js/freelancer.min.js')}}"></script>
 
   </body>
 
