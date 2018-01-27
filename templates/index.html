@@ -57,9 +57,11 @@
         <h1 class="text-uppercase mb-0">SmartLab</h1>
         <hr class="star-light">
         <h2 class="font-weight-light mb-0">Choose a Project to get Started!</h2>
-        <form class ="project" action="/project1">
-            <input class = 'btn' type="submit" value="Project 1" />
-        </form>
+        {% for project in projects %}
+          <form class ="project" action="/projects/{{project[0]}}">
+              <input class = 'btn' type="submit" value="{{project[1]}}" />
+          </form>
+        {% endfor %}
       </div>
     </header>
 
