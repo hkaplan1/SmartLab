@@ -57,30 +57,30 @@
     </nav>
 
     <!-- Header -->
-    <!-- <header class="masthead bg-primary text-white text-center">
+    <header class="masthead bg-primary text-white text-center">
       <div class="container">
-        <img class="img-fluid mb-5 d-block mx-auto" src="{url_for('static', filename='img/profile.png')}}" alt="">
-        <h1 class="text-uppercase mb-0">SmartLab</h1>
-        <hr class="star-light">
-        <h2 class="font-weight-light mb-0">Choose a Project to get Started!</h2>
+        <h1 class="text-uppercase mb-0">{{project_data[0]['name']}}</h1>
+
+        <h2 class="font-weight-light mb-0"></h2>
         {% for project in projects %}
           <form class ="project" action="/projects/{{project[0]}}">
               <input class = 'btn' type="submit" value="{{project[1]}}" />
           </form>
         {% endfor %}
       </div>
-    </header> -->
+    </header>
 
     <!-- Portfolio Grid Section -->
     <section class="portfolio" id="portfolio">
       <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">{{project_data[0]['name']}}</h2>
+        <h2 class="text-center text-uppercase text-secondary mb-0">Steps:</h2>
         <hr class="star-dark mb-5">
-        <div class="row">
+        <div class="row row-centered">
           <div class="col-md-6 col-lg-4">
-            <form action="https://api.particle.io/v1/devices/{{project_data[1]['device_id']}}/{{project_data[1]['function']}}?access_token={{access_key}}" method="POST">
-              <button type="submit" name="args" value="on">Start Here!</button>
-            </form>
+              <button class = 'btn' onClick="firstStep()" type="submit" name="args" value="on">Start Here!</button>
+
+              <p hidden id='device_id1'>{{project_data[1]['device_id']}}</p>
+              <p hidden id='function1' >{{project_data[1]['function']}}</p>
             <!-- <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">
               <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
                 <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
@@ -92,7 +92,7 @@
           </div>
           {% for i in range(2,project_data|length) %}
           <div class="col-md-6 col-lg-4">
-              <button onclick="postForms({{i}})" type="submit" name="args" value="{{i}}">Step {{i}}</button>
+              <button class = 'btn' onclick="postForms({{i}})" type="submit" name="args" value="{{i}}">Step {{i}}</button>
 
               <p hidden id='device_id{{i-1}}'>{{project_data[i-1]['device_id']}}</p>
               <p hidden id='function{{i-1}}' >{{project_data[i-1]['function']}}</p>
@@ -106,7 +106,7 @@
                   <i class="fa fa-search-plus fa-3x"></i>
                 </div>
               </div>
-              <img class="img-fluid" src="{{url_for('static', filename='img/portfolio/cake.png')}}" alt="">
+              < class="img-fluid" src="{{url_for('static', filename='img/portfolio/cake.png')}}" alt="">
             </a>
           </div>
           <div class="col-md-6 col-lg-4">
@@ -160,25 +160,20 @@
         <hr class="star-light mb-5">
         <div class="row">
           <div class="col-lg-4 ml-auto">
-            <p class="lead">Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional LESS stylesheets for easy customization.</p>
+            <p class="lead"></p>
           </div>
           <div class="col-lg-4 mr-auto">
-            <p class="lead">Whether you're a student looking to showcase your work, a professional looking to attract clients, or a graphic artist looking to share your projects, this template is the perfect starting point!</p>
+            <p class="lead"></p>
           </div>
         </div>
-        <div class="text-center mt-4">
-          <a class="btn btn-xl btn-outline-light" href="#">
-            <i class="fa fa-download mr-2"></i>
-            Download Now!
-          </a>
-        </div>
+
       </div>
     </section>
 
     <!-- Contact Section -->
     <section id="contact">
       <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">Contact Me</h2>
+        <h2 class="text-center text-uppercase text-secondary mb-0">Contact Little Devices</h2>
         <hr class="star-dark mb-5">
         <div class="row">
           <div class="col-lg-8 mx-auto">
@@ -230,8 +225,7 @@
         <div class="row">
           <div class="col-md-4 mb-5 mb-lg-0">
             <h4 class="text-uppercase mb-4">Location</h4>
-            <p class="lead mb-0">2215 John Daniel Drive
-              <br>Clark, MO 65243</p>
+            <p class="lead mb-0">Cambridge, MA
           </div>
           <div class="col-md-4 mb-5 mb-lg-0">
             <h4 class="text-uppercase mb-4">Around the Web</h4>
@@ -264,9 +258,9 @@
             </ul>
           </div>
           <div class="col-md-4">
-            <h4 class="text-uppercase mb-4">About Freelancer</h4>
-            <p class="lead mb-0">Freelance is a free to use, open source Bootstrap theme created by
-              <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+            <h4 class="text-uppercase mb-4">About Little Devices</h4>
+            <p class="lead mb-0">The <a href="https://littledevices.org/">Little Devices Lab</a> explores the design, invention, and policy spaces for DIY health technologies around the world
+              .</p>
           </div>
         </div>
       </div>
@@ -274,7 +268,7 @@
 
     <div class="copyright py-4 text-center text-white">
       <div class="container">
-        <small>Copyright &copy; Your Website 2018</small>
+        <small>Copyright &copy; Little Devices 2018</small>
       </div>
     </div>
 

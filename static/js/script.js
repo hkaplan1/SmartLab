@@ -1,3 +1,21 @@
+function firstStep(){
+  var device_id = document.getElementById("device_id1").innerText;
+  var funct = document.getElementById("function1").innerText;
+  $.ajax({
+    type: 'POST',
+    url: "https://api.particle.io/v1/devices/"+device_id+"/"+funct,
+    data: {
+      access_token:"{{access_key}}",
+      arg:"on"},
+    success: function(data, status, xhr){
+      console.log("ok")
+    },
+    error: function(xhr, status, err) {
+      console.log("error")
+    }
+  });
+};
+
 function postForms(step){
   var step = step.toString();
   var stepPrev = (step-1).toString();
@@ -35,5 +53,4 @@ function postForms(step){
       console.log("error")
     }
   });
-
 };
