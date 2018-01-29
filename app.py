@@ -22,7 +22,7 @@ projectData = {1:
                  {"device_id":device2,"function":"step4"}],
                 3:
                 [{"name":"Project 3"},
-                {"device_id":device1,"function":"step2"}] 
+                {"device_id":device1,"function":"step2"}]
                }
 
 

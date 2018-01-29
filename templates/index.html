@@ -56,12 +56,7 @@
         <img style="width: 20%; height: 20%" class="-fluid mb-5 d-block mx-auto" src="static/img/profile.png" alt="">
         <h1 class="text-uppercase mb-0">SmartLab</h1>
         <hr class="star-light">
-        <h2 class="font-weight-light mb-0">Choose a Project to get Started!</h2>
-        {% for project in projects %}
-          <form class ="project" action="/projects/{{project[0]}}">
-              <input class = 'btn' type="submit" value="{{project[1]}}" />
-          </form>
-        {% endfor %}
+        <h2 class="font-weight-light mb-0">Choose a Project from the portfolio below to get Started!</h2>
       </div>
     </header>
 
@@ -71,69 +66,16 @@
         <h2 class="text-center text-uppercase text-secondary mb-0">Portfolio</h2>
         <hr class="star-dark mb-5">
         <div class="row">
+          {% for project in projects %}
           <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/cabin.png" alt="">
-            </a>
+            <form class ="project" action="/projects/{{project[0]}}">
+                <input class = 'btn' type="submit" value="{{project[1]}}" />
+            </form>
           </div>
-          <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-2">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/cake.png" alt="">
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-3">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/circus.png" alt="">
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-4">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/game.png" alt="">
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-5">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/safe.png" alt="">
-            </a>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-6">
-              <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                  <i class="fa fa-search-plus fa-3x"></i>
-                </div>
-              </div>
-              <img class="img-fluid" src="static/img/portfolio/submarine.png" alt="">
-            </a>
-          </div>
+          {% endfor %}
+
         </div>
       </div>
-    </section>
 
     <!-- About Section -->
     <section class="bg-primary text-white mb-0" id="about">
