@@ -27,18 +27,24 @@ projectData = {1:{"name":"Project 1",
 airTable_key = "keychadtrZj5TMvY1"
 authorization = "Bearer " + airTable_key
 
-@app.route('/airtable')
-def airtable():
+@app.route('/guides')
+def guides():
     headers = {
         'Authorization': authorization,
         'maxRecords': '100'
     }
-    response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Hub%20Projects?view=Grid%20view", headers=headers)
+    response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Hub%20Projects", headers=headers)
     projects = []
     for i in response.json()['records']:
-        projects.append(i['fields']['Project Name'])
+        try:
+            projects.append([i['fields']['Project Name'],i['fields']['Main Photo'][0]['url']])
+        except:
+            projects.append([i['fields']['Project Name']])
+    return render_template('guides2.html', projects = projects)
 
-    return render_template('airtable.html', projects = projects)
+@app.route('/guides/', defaults ={'project':1})
+def guide():
+    pass
 
 @app.route('/')
 def home():
@@ -50,7 +56,7 @@ def theme():
 
 
 @app.route('/guides')
-def guide():
+def projects():
     projects = []
     for key, value in sorted(projectData.items()):
         print(key,value)
@@ -62,7 +68,7 @@ def guide():
 @app.route('/guides/', defaults={'project': 1})
 @app.route('/guides/<int:project>')
 def show_project(project):
-    return render_template('project.html',
+    return render_template('project2.html',
         access_key=access_key,
         project_data = projectData[project]
     )

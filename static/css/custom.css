@@ -78,4 +78,11 @@
     background-color: #eee; /* Add a hover effect to all links, except for headers */
 }
 
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+.hide{
+  display:none;
+}
+.listImg {
+  width: 10%;
+  height:10%;
+
+}
