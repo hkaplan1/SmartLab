@@ -71,17 +71,17 @@
         <div class="row">
           <ul id = "myUL">
           {% for i in range(5) %}
-            {% if projects[i]|length > 1 %}
-              <li><a href="#">{{projects[i][0]}}<img class = "listImg" src="{{projects[i][1]}}" /></a></li>
+            {% if projects[i]|length > 2 %}
+              <li><a href="/guides/{{projects[i][2]}}">{{projects[i][0]}}    <img class = "listImg" src="{{projects[i][1]}}" /></a></li>
             {% else %}
-              <li><a href="#">{{projects[i][0]}}</a></li>
+              <li><a href="/guides/{{projects[i][1]}}">{{projects[i][0]}}    </a></li>
             {% endif %}
           {% endfor %}
           {% for j in range(5,projects|length) %}
-            {% if projects[j]|length > 1 %}
-              <li style = "display:hidden;"><a href="#">{{projects[j][0]}}<img class = "listImg" src="{{projects[j][1]}}"" /></a></li>
+            {% if projects[j]|length > 2 %}
+              <li style = "display:hidden;"><a href="/guides/{{projects[j][2]}}">{{projects[j][0]}}    <img class = "listImg" src="{{projects[j][1]}}" /></a></li>
             {% else %}
-              <li style = "display:hidden;"><a href="#">{{projects[j][0]}}</a></li>
+              <li style = "display:hidden;"><a href="/guides/{{projects[j][1]}}">{{projects[j][0]}}    </a></li>
             {% endif %}
           {% endfor %}
           </ul>
