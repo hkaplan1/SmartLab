@@ -108,14 +108,14 @@ def guide(project_id):
                     Ids.add((device['fields']['Particle Device ID'],step4[1]))
                     allIds.add(device['fields']['Particle Device ID'])
                     break
-        stepIds.append(Ids)
+        stepIds.append(list(Ids))
         devices = set()
-    finalSteps = {}
-    stepNum= 0
-    for each in stepIds:
-        finalSteps[stepNum] = each
-        stepNum += 1
-    return render_template('project2.html',name = project['name'],template_steps = finalSteps,script_steps = str(finalSteps), devices = list(allIds))
+    steps = {}
+    steps['steps'] = stepIds
+    print(steps)
+
+
+    return render_template('project2.html',name = project['name'],template_steps = stepIds, script_steps = steps, devices = list(allIds))
 
 @app.route('/')
 def home():

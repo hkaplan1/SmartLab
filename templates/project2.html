@@ -73,42 +73,43 @@
         <div class="row row-centered">
           {% for i in range(template_steps|length) %}
           <div class="col-md-6 col-lg-4">
-              <button class = 'btn' onclick="doStep({{i}})" type="submit" name="args" value="{{i}}">Step {{i}}</button>
+              <button class = 'btn' onclick="doStep({{i}})" type="submit" name="args" value="{{i}}">Step {{i+1}}</button>
 
           </div>
           {% endfor %}
           <div class="col-md-6 col-lg-4">
-            <button class = 'btn' onClick="end()" type="submit" name="args" value="on">Click To Finish</button>
+            <button class = 'btn' onClick="finish()" type="submit" name="args" value="on">Click To Finish</button>
 
           </div>
         </div>
       </div>
     </section>
     <script>
+    var access = "077ab2a1817aecb1dbacb4cc58439f447eeffc76";
+    var devices = JSON.parse('{{devices|tojson}}');
     function doStep(step){
-      var access = "077ab2a1817aecb1dbacb4cc58439f447eeffc76";
-      var steps = JSON.parse('{{script_steps| tojson| safe}}');
-      var devices = ('{{ devices | tojson | safe}}');
-      for (var device in devices){
+      var steps = JSON.parse('{{script_steps|tojson}}');
+      var steps = steps['steps']
+      for (i=0; i<devices.length; i++){
         $.ajax({
           type: 'POST',
-          url: "https://api.particle.io/v1/devices/"+device+"/allOff",
+          url: "https://api.particle.io/v1/devices/"+devices[i]+"/alloff",
           data: {
             access_token:access,
             },
           success: function(data, status, xhr){
-            console.log("ok")
+            console.log("ok");
           },
           error: function(xhr, status, err) {
-            console.log("error")
+            console.log("error");
           }
         });
       }
       // turn on next step
-      for (k=0;k<steps[i].length;k++){
+      for (k=0;k<steps[step].length;k++){
         $.ajax({
           type: 'POST',
-          url: "https://api.particle.io/v1/devices/"+steps[i][k][0]+"/"+steps[i][k][0],
+          url: "https://api.particle.io/v1/devices/"+steps[step][k][0]+"/"+steps[step][k][1],
           data: {
             access_token:access,
             },
@@ -121,6 +122,23 @@
         });
       };
     };
+    function finish(){
+      for (l=0; l<devices.length; l++){
+        $.ajax({
+          type: 'POST',
+          url: "https://api.particle.io/v1/devices/"+devices[l]+"/alloff",
+          data: {
+            access_token:access,
+            },
+          success: function(data, status, xhr){
+            console.log("ok");
+          },
+          error: function(xhr, status, err) {
+            console.log("error");
+          }
+        });
+      }
+    }
     </script>
 
 
