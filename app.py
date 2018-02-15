@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import requests
+import json
 import urllib
 
 
@@ -99,11 +100,13 @@ def guide(project_id):
     deviceIds = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Particle%20Devices?view=Grid%20view",headers = headers)
     stepIds = []
     Ids = set()
+    allIds = set()
     for j in stepDevices:
         for step4 in j:
             for device in deviceIds.json()['records']:
                 if device['id'] == step4[0]:
                     Ids.add((device['fields']['Particle Device ID'],step4[1]))
+                    allIds.add(device['fields']['Particle Device ID'])
                     break
         stepIds.append(Ids)
         devices = set()
@@ -112,9 +115,7 @@ def guide(project_id):
     for each in stepIds:
         finalSteps[stepNum] = each
         stepNum += 1
-    print(finalSteps)
-
-    return render_template('guides.html',steps = stepIds)
+    return render_template('project2.html',name = project['name'],template_steps = finalSteps,script_steps = str(finalSteps), devices = list(allIds))
 
 @app.route('/')
 def home():
