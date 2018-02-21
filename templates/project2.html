@@ -79,7 +79,6 @@
           {% endfor %}
           <div class="col-md-6 col-lg-4">
             <button class = 'btn' onClick="finish()" type="submit" name="args" value="on">Click To Finish</button>
-
           </div>
         </div>
       </div>
@@ -90,13 +89,15 @@
     function doStep(step){
       var steps = JSON.parse('{{script_steps|tojson}}');
       var steps = steps['steps']
+      console.log(access)
       for (i=0; i<devices.length; i++){
         $.ajax({
           type: 'POST',
-          url: "https://api.particle.io/v1/devices/"+devices[i]+"/alloff",
+          url: "https://api.particle.io/v1/devices/"+devices[i]+"/allOff",
           data: {
             access_token:access,
             },
+          async: false,
           success: function(data, status, xhr){
             console.log("turned off");
           },
@@ -126,7 +127,7 @@
       for (l=0; l<devices.length; l++){
         $.ajax({
           type: 'POST',
-          url: "https://api.particle.io/v1/devices/"+devices[l]+"/alloff",
+          url: "https://api.particle.io/v1/devices/"+devices[l]+"/allOff",
           data: {
             access_token:access,
             },
