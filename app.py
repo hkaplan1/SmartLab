@@ -53,7 +53,8 @@ def guide(project_id):
                     break
             project['steps'] = steps
             break
-
+    print('first')
+    print(project)
 
     #get material categories from materials table data
     material_response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/tblB5R6ZDXJ2Z4YoQ?sort%5B0%5D%5Bfield%5D=ID+%23&sort%5B0%5D%5Bdirection%5D=asc", headers=headers)
@@ -68,6 +69,8 @@ def guide(project_id):
                     break
         stepCat.append(categories)
         categories = set()
+    print('second')
+    print(stepCat)
 
     #convert categories for each step, to areas for each step
     area_response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Space%20Organization?&view=Grid%20view", headers=headers)
@@ -78,11 +81,22 @@ def guide(project_id):
         for step2 in k:
             for area in area_response.json()['records']:
                 if area['id'] == step2:
+                    print('AREA')
+                    print(area)
                     areas.add(area['fields']['Area'][0])
-                    functions[area['fields']['Area'][0]] = area['fields']['Associated Neopixels']
+                    try:
+                        functions[area['fields']['Area'][0]].append(area['fields']['Associated Neopixels'])
+                    except:
+                        functions[area['fields']['Area'][0]] = [area['fields']['Associated Neopixels']]
                     break
+
         stepAreas.append(areas)
         areas = set()
+    print('steps')
+    print(stepAreas)
+    print('functions')
+    print(functions)
+
     #convert areas for each step, to devices for each step
     deviceData = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Space%20Areas?view=Grid%20view",headers = headers)
     stepDevices = []
@@ -91,10 +105,12 @@ def guide(project_id):
         for step3 in l:
             for deviceArea in deviceData.json()['records']:
                 if deviceArea['id'] == step3:
-                    devices.add((deviceArea['fields']['MIT'][0],functions[step3]))
+                    devices.add((deviceArea['fields']['MIT'][0],functions[step3].pop(0)))
                     break
         stepDevices.append(devices)
         devices = set()
+    print('combined')
+    print(stepDevices)
 
     #convert devices to device_ids
     deviceIds = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Particle%20Devices?view=Grid%20view",headers = headers)
@@ -106,10 +122,10 @@ def guide(project_id):
             for device in deviceIds.json()['records']:
                 if device['id'] == step4[0]:
                     Ids.add((device['fields']['Particle Device ID'],step4[1]))
-                    allIds.add(device['fields']['Particle Device ID'])
+                    print(Ids)
                     break
         stepIds.append(list(Ids))
-        devices = set()
+        Ids = set()
     steps = {}
     steps['steps'] = stepIds
     print(steps)

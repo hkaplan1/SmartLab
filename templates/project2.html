@@ -29,7 +29,7 @@
   src="https://code.jquery.com/jquery-3.2.1.js"
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
-    <script src="{{url_for('static', filename='js/script.js')}}"></script>
+    <!-- <script src="{{url_for('static', filename='js/script.js')}}"></script> -->
 
   </head>
 
@@ -98,7 +98,7 @@
             access_token:access,
             },
           success: function(data, status, xhr){
-            console.log("ok");
+            console.log("turned off");
           },
           error: function(xhr, status, err) {
             console.log("error");
