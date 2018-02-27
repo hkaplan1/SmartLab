@@ -1,11 +1,11 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, session
 import requests
 import json
 import urllib
 
 
 app = Flask(__name__)
-
+app.secret_key = 'smartlab'
 # particle access key
 access_key = "077ab2a1817aecb1dbacb4cc58439f447eeffc76"
 
@@ -25,11 +25,16 @@ def guides():
         except:
             projects.append([i['fields']['Project Name'],i['id']])
 
-    return render_template('guides2.html', projects = projects)
+    return render_template('guides.html', projects = projects)
+
+def chomp(s):
+    return s[:-1] if s.endswith('\n') else s
 
 @app.route('/guides/', defaults ={'project_id':''})
 @app.route('/guides/<string:project_id>')
 def guide(project_id):
+    session['project_id'] = project_id
+
     # get projects table data
     headers = {
         'Authorization': authorization,
@@ -41,6 +46,11 @@ def guide(project_id):
     for i in project_response.json()['records']:
         if i['id'] == project_id:
             project['name'] = i['fields']['Project Name']
+            videos = i['fields']['Videos'].strip().split(',')
+            for k in range(len(videos)):
+                videos[k] = chomp(videos[k])
+            session['videos'] = videos
+
             j = 1
             steps = []
             while True:
@@ -120,33 +130,21 @@ def guide(project_id):
     steps = {}
     steps['steps'] = stepIds
 
-    return render_template('project2.html',name = project['name'],template_steps = stepIds, script_steps = steps, devices = list(allIds))
+    return render_template('projects.html',name = project['name'],template_steps = stepIds, script_steps = steps, devices = list(allIds))
 
 @app.route('/')
 def home():
     return render_template('hub.html')
 
+@app.route('/videos')
+def videos():
+    videos = session['videos']
+    return render_template('videos.html',videos=videos)
+
 @app.route('/themes')
 def theme():
-    return render_template('projects.html')
+    return render_template('themes.html')
 
-
-@app.route('/guides')
-def projects():
-    projects = []
-    for key, value in sorted(projectData.items()):
-        projects.append((key,value['name']))
-
-    return render_template('guides.html',projects = projects)
-
-#
-# @app.route('/guides/', defaults={'project': 1})
-# @app.route('/guides/<int:project>')
-# def show_project(project):
-#     return render_template('project2.html',
-#         access_key=access_key,
-#         project_data = projectData[project]
-#     )
 
 
 if __name__ == "__main__":
