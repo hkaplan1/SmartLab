@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, session
+from flask import Flask, flash, render_template, jsonify, session, request
 import requests
 import json
 import urllib
@@ -11,6 +11,26 @@ access_key = "077ab2a1817aecb1dbacb4cc58439f447eeffc76"
 
 airTable_key = "keychadtrZj5TMvY1"
 authorization = "Bearer " + airTable_key
+
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('hub.html')
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'password' and request.form['username'] == 'admin':
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return home()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
 
 @app.route('/guides')
 def guides():
@@ -132,9 +152,6 @@ def guide(project_id):
 
     return render_template('projects.html',name = project['name'],template_steps = stepIds, script_steps = steps, devices = list(allIds))
 
-@app.route('/')
-def home():
-    return render_template('hub.html')
 
 @app.route('/videos')
 def videos():
