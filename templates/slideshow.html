@@ -29,11 +29,11 @@
   src="https://code.jquery.com/jquery-3.2.1.js"
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
-    <!-- <script src="{{url_for('static', filename='js/script.js')}}"></script> -->
+    <script src="{{url_for('static', filename='js/script2.js')}}"></script>
 
   </head>
 
-  <body id="page-top">
+  <body id="page-top" onload="showDivs()" >
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
@@ -71,28 +71,61 @@
         <h2 class="text-center text-uppercase text-secondary mb-0">Steps:</h2>
         <hr class="star-dark mb-5">
         <div class="row row-centered">
+          <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;Previous</button>
           {% for i in range(template_steps|length) %}
-          <div class="col-md-6 col-lg-4">
-              <button class = 'btn' onclick="doStep({{i}})" type="submit" name="args" value="{{i}}">Step {{i+1}}</button>
-
+          <div class="mySlides">
+              Step {{i+1}}
+              {{ stepsText[i|string] }}
           </div>
           {% endfor %}
-          <div class="col-md-6 col-lg-4">
+          <button class="w3-button w3-display-right" onclick="plusDivs(+1)">Next&#10095;</button>
+          <div>
             <button class = 'btn' onClick="finish()" type="submit" name="args" value="on">Click To Finish</button>
           </div>
         </div>
       </div>
     </section>
-    <script>
+    <script type="text/javascript">
+    var slideIndex = 1;
+    var numSteps = parseInt("{{template_steps|length}}");
+    console.log(numSteps);
     var access = "077ab2a1817aecb1dbacb4cc58439f447eeffc76";
-    var devices = JSON.parse('{{devices|tojson}}');
+    var devices = JSON.parse('{{devices|safe}}');
+    var devices = devices['devices']
+    var allSteps = JSON.parse('{{script_steps|safe}}');
+    var steps = allSteps['steps']
+    var num = '0';
+
+    console.log(steps['5']['lights']['0']);
+
+
+    showDivs(slideIndex);
+
+    console.log('showing slide')
+
+    function plusDivs(n) {
+        console.log(slideIndex);
+        showDivs(slideIndex += n);
+        console.log(slideIndex);
+        doStep(slideIndex);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (n > x.length -1) {slideIndex = 1}
+        if (n < 1) {slideIndex = x.length-1} ;
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex-1].style.display = "block";
+    }
     function doStep(step){
-      var steps = JSON.parse('{{script_steps|tojson}}');
-      var steps = steps['steps']
-      console.log(access)
+      console.log(slideIndex);
       for (i=0; i<devices.length; i++){
         $.ajax({
           type: 'POST',
+          async: true,
           url: "https://api.particle.io/v1/devices/"+devices[i]+"/allOff",
           data: {
             access_token:access,
@@ -102,15 +135,15 @@
           },
           error: function(xhr, status, err) {
             console.log("error");
-          }
-          async: false;
+          },
+          timeout: 3000,
         });
       }
       // turn on next step
-      for (k=0;k<steps[step].length;k++){
+      for (k=0;k<steps[step.toString()].lights.length;k++){
         $.ajax({
           type: 'POST',
-          url: "https://api.particle.io/v1/devices/"+steps[step][k][0]+"/"+steps[step][k][1],
+          url: "https://api.particle.io/v1/devices/"+steps[step.toString()]['lights'][k.toString()]['deviceid']+"/"+steps[step.toString()]['lights'][k.toString()]['function'],
           data: {
             access_token:access,
             },
@@ -119,7 +152,8 @@
           },
           error: function(xhr, status, err) {
             console.log("error")
-          }
+          },
+          timeout: 3000,
         });
       };
     };
@@ -127,6 +161,7 @@
       for (l=0; l<devices.length; l++){
         $.ajax({
           type: 'POST',
+          timeout: 3000,
           url: "https://api.particle.io/v1/devices/"+devices[l]+"/allOff",
           data: {
             access_token:access,
@@ -136,7 +171,8 @@
           },
           error: function(xhr, status, err) {
             console.log("error");
-          }
+          },
+          timeout: 3000,
         });
       }
     }

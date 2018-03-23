@@ -1,16 +1,17 @@
-from flask import Flask, flash, render_template, jsonify, session, request
+from flask import Flask, Markup, flash, render_template, jsonify, session, request, json
 import requests
-import json
 import urllib
 
 
 app = Flask(__name__)
 app.secret_key = 'smartlab'
+app.jinja_env.filters['json'] = lambda v: Markup(json.dumps(v))
 # particle access key
 access_key = "077ab2a1817aecb1dbacb4cc58439f447eeffc76"
 
 airTable_key = "keychadtrZj5TMvY1"
 authorization = "Bearer " + airTable_key
+
 
 @app.route('/')
 def home():
@@ -62,6 +63,7 @@ def guide(project_id):
     project_response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Hub%20Projects", headers=headers)
     project = {}
 
+    steps2 = {}
     # collect all steps from project table
     for i in project_response.json()['records']:
         if i['id'] == project_id:
@@ -78,6 +80,7 @@ def guide(project_id):
                 textTag = 'Step ' + str(j) + ' Text'
                 try:
                     steps.append([i['fields'][materialTag],i['fields'][textTag]])
+                    steps2[str(j-1)] = {'text':i['fields'][textTag]}
                     j += 1
                 except:
                     break
@@ -108,8 +111,6 @@ def guide(project_id):
         for step2 in k:
             for area in area_response.json()['records']:
                 if area['id'] == step2:
-                    print('AREA')
-                    print(area)
                     areas.add(area['fields']['Area'][0])
                     try:
                         functions[area['fields']['Area'][0]].append(area['fields']['Associated Neopixels'])
@@ -138,8 +139,8 @@ def guide(project_id):
     stepIds = []
     Ids = set()
     allIds = set()
-    for j in stepDevices:
-        for step4 in j:
+    for k in stepDevices:
+        for step4 in k:
             for device in deviceIds.json()['records']:
                 if device['id'] == step4[0]:
                     Ids.add((device['fields']['Particle Device ID'],step4[1]))
@@ -147,10 +148,28 @@ def guide(project_id):
                     break
         stepIds.append(list(Ids))
         Ids = set()
-    steps = {}
-    steps['steps'] = stepIds
+    current_step = []
+    for l in range(0,len(stepIds)):
+        for m in stepIds[l]:
+            current_step.append({"deviceid":m[0],"function":m[1]})
+        steps2[str(l)]['lights'] = current_step
+        current_step = []
+    allSteps = {}
+    allSteps['steps'] = steps2
+    particles = {}
+    particles['devices'] = list(allIds)
 
-    return render_template('projects.html',name = project['name'],template_steps = stepIds, script_steps = steps, devices = list(allIds))
+
+
+    stepsText = {}
+    for s in range(len(allSteps['steps'])):
+        print(allSteps['steps'][str(s)]['text'])
+        stepsText[str(s)] = allSteps['steps'][str(s)]['text']
+
+    print(stepsText)
+
+
+    return render_template('slideshow.html',name = project['name'],template_steps = stepIds, script_steps = json.dumps(allSteps),stepsText = stepsText, devices = json.dumps(particles))
 
 
 @app.route('/videos')
