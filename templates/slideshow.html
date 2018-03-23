@@ -69,11 +69,7 @@
     <section class="portfolio" id="portfolio">
       <div class="container">
         {% for i in range(template_steps|length) %}
-        <div class = "mySlides fill row row-centered" style = "background: url('{{ stepsTextImg[i|string][0] }}') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;">
+        <div class = "mySlides fill row row-centered">
           <h2 class="text-center text-uppercase text-secondary mb-0">Step {{i+1}}</h2>
           <hr class="star-dark mb-5">
           <h3 style = "text-align:center">{{ stepsTextImg[i|string][0] }}</h3>
