@@ -68,20 +68,24 @@
     <!-- Portfolio Grid Section -->
     <section class="portfolio" id="portfolio">
       <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">Steps:</h2>
-        <hr class="star-dark mb-5">
-        <div class="row row-centered">
-          <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;Previous</button>
-          {% for i in range(template_steps|length) %}
-          <div class="mySlides">
-              Step {{i+1}}
-              {{ stepsText[i|string] }}
-          </div>
+        {% for i in range(template_steps|length) %}
+        <div class = "mySlides fill row row-centered" style = "background: url('{{ stepsTextImg[i|string][0] }}') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;">
+          <h2 class="text-center text-uppercase text-secondary mb-0">Step {{i+1}}</h2>
+          <hr class="star-dark mb-5">
+          <h3 style = "text-align:center">{{ stepsTextImg[i|string][0] }}</h3>
+          {% for url in stepsTextImg[i|string][1] %}
+          <img src={{url}} style="width:50%;display: block; margin: 0 auto;">
           {% endfor %}
-          <button class="w3-button w3-display-right" onclick="plusDivs(+1)">Next&#10095;</button>
-          <div>
-            <button class = 'btn' onClick="finish()" type="submit" name="args" value="on">Click To Finish</button>
-          </div>
+          <button style = "float:left" class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;Previous</button>
+          <button style = "float:right" class="w3-button w3-display-right" onclick="plusDivs(+1)">Next&#10095;</button>
+        </div>
+        {% endfor %}
+        <div>
+          <button style="display: block; margin: 0 auto;" class = 'btn' onClick="finish()" type="submit" name="args" value="on">Click To Finish</button>
         </div>
       </div>
     </section>

@@ -78,9 +78,13 @@ def guide(project_id):
             while True:
                 materialTag = 'Step ' + str(j) + ' Materials'
                 textTag = 'Step ' + str(j) + ' Text'
+                photoTag= 'Step ' + str(j) + ' Photos'
                 try:
                     steps.append([i['fields'][materialTag],i['fields'][textTag]])
-                    steps2[str(j-1)] = {'text':i['fields'][textTag]}
+                    photos = []
+                    for photo in i['fields'][photoTag]:
+                        photos.append(photo['url'])
+                    steps2[str(j-1)] = {'text':i['fields'][textTag],'photos':photos}
                     j += 1
                 except:
                     break
@@ -161,15 +165,13 @@ def guide(project_id):
 
 
 
-    stepsText = {}
+    stepsTextImg = {}
     for s in range(len(allSteps['steps'])):
-        print(allSteps['steps'][str(s)]['text'])
-        stepsText[str(s)] = allSteps['steps'][str(s)]['text']
-
-    print(stepsText)
+        stepsTextImg[str(s)] = [allSteps['steps'][str(s)]['text'],allSteps['steps'][str(s)]['photos']]
 
 
-    return render_template('slideshow.html',name = project['name'],template_steps = stepIds, script_steps = json.dumps(allSteps),stepsText = stepsText, devices = json.dumps(particles))
+
+    return render_template('slideshow.html',name = project['name'],template_steps = stepIds, script_steps = json.dumps(allSteps),stepsTextImg = stepsTextImg, devices = json.dumps(particles))
 
 
 @app.route('/videos')
