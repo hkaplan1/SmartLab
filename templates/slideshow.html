@@ -33,7 +33,7 @@
 
   </head>
 
-  <body id="page-top" onload="showDivs()" >
+  <body id="page-top" onload="showDivs(); doStep(0)" >
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
@@ -125,7 +125,7 @@
       for (i=0; i<devices.length; i++){
         $.ajax({
           type: 'POST',
-          async: true,
+          async: false,
           url: "https://api.particle.io/v1/devices/"+devices[i]+"/allOff",
           data: {
             access_token:access,
@@ -161,7 +161,6 @@
       for (l=0; l<devices.length; l++){
         $.ajax({
           type: 'POST',
-          timeout: 3000,
           url: "https://api.particle.io/v1/devices/"+devices[l]+"/allOff",
           data: {
             access_token:access,

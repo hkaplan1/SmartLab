@@ -68,10 +68,13 @@ def guide(project_id):
     for i in project_response.json()['records']:
         if i['id'] == project_id:
             project['name'] = i['fields']['Project Name']
-            videos = i['fields']['Videos'].strip().split(',')
-            for k in range(len(videos)):
-                videos[k] = chomp(videos[k])
-            session['videos'] = videos
+            try:
+                videos = i['fields']['Videos'].strip().split(',')
+                for k in range(len(videos)):
+                    videos[k] = chomp(videos[k])
+                session['videos'] = videos
+            except:
+                pass
 
             j = 1
             steps = []
@@ -81,16 +84,20 @@ def guide(project_id):
                 photoTag= 'Step ' + str(j) + ' Photos'
                 try:
                     steps.append([i['fields'][materialTag],i['fields'][textTag]])
-                    photos = []
-                    for photo in i['fields'][photoTag]:
-                        photos.append(photo['url'])
-                    steps2[str(j-1)] = {'text':i['fields'][textTag],'photos':photos}
-                    j += 1
+                    try:
+                        photos = []
+                        for photo in i['fields'][photoTag]:
+                            photos.append(photo['url'])
+                        steps2[str(j-1)] = {'text':i['fields'][textTag],'photos':photos}
+                        j += 1
+                    except:
+                        pass
                 except:
                     break
             project['steps'] = steps
             break
 
+    print(steps2)
     #get material categories from materials table data
     material_response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/tblB5R6ZDXJ2Z4YoQ?sort%5B0%5D%5Bfield%5D=ID+%23&sort%5B0%5D%5Bdirection%5D=asc", headers=headers)
     stepCat = []
@@ -153,6 +160,8 @@ def guide(project_id):
         stepIds.append(list(Ids))
         Ids = set()
     current_step = []
+
+    print(steps2)
     for l in range(0,len(stepIds)):
         for m in stepIds[l]:
             current_step.append({"deviceid":m[0],"function":m[1]})
@@ -173,7 +182,6 @@ def guide(project_id):
 
     return render_template('slideshow.html',name = project['name'],template_steps = stepIds, script_steps = json.dumps(allSteps),stepsTextImg = stepsTextImg, devices = json.dumps(particles))
 
-
 @app.route('/videos')
 def videos():
     videos = session['videos']
@@ -182,6 +190,95 @@ def videos():
 @app.route('/themes')
 def theme():
     return render_template('themes.html')
+
+@app.route('/materials')
+def materials():
+    headers = {
+        'Authorization': authorization,
+    }
+    #get all tags from airtable
+    tags = []
+    tagResponse = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Material%2FTechnical%20Tags", headers=headers)
+    for k in tagResponse.json()['records']:
+        tags.append(k['fields']['Material Tags'])
+
+    #get all materials from airtable
+    response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Material%20Database", headers=headers)
+    materials = []
+    for i in response.json()['records']:
+        part_info = {}
+        #build dictionaries for each mateirl with name,category,id, and tags
+        #not all parts will have tags hence the try,except
+        try:
+            part_info['name'] = i['fields']['Name']
+            part_info['id'] = i ['id']
+            part_info['category'] = i['fields']['Category']
+            try:
+                part_tags = []
+                for tag in i['fields']['Technical Tags']:
+                    for j in tagResponse.json()['records']:
+                        if tag == j['id']:
+                            part_tags.append(j['fields']['Material Tags'])
+                part_info['tags'] = part_tags
+            except:
+                pass
+            materials.append(part_info)
+        except:
+            pass
+
+    print(tags)
+    print(materials)
+    return render_template('materials.html',materials=materials)
+#
+# @app.route('/videoHub')
+# def videoHub():
+#     return render_template('video_hub.html')
+#
+# @app.route('/projectVideos')
+# def projectVideos():
+#     headers = {
+#         'Authorization': authorization,
+#     }
+#     response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Hub%20Projects", headers=headers)
+#     projects = []
+#     for i in response.json()['records']:
+#         try:
+#             projects.append([i['fields']['Project Name'],i['fields']['Main Photo'][0]['url'],i['id']])
+#         except:
+#             projects.append([i['fields']['Project Name'],i['id']])
+#
+#     project_response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Hub%20Projects", headers=headers)
+#     project_videos = []
+#
+#     steps2 = {}
+#     # collect all steps from project table
+#     for item in projects:
+#         for i in project_response.json()['records']:
+#             if i['id'] == item[-1]:
+#                 project = {}
+#                 project['name'] = item[0]
+#                 if len(item) > 2:
+#                     project['photo'] = item[1]
+#                 try:
+#                     videos = i['fields']['Videos'].strip().split(',')
+#                     for k in range(len(videos)):
+#                         videos[k] = chomp(videos[k])
+#                     project['videos'] = videos
+#                     project['id'] = i['id']
+#                     project_videos.append(project)
+#                 except:
+#                     pass
+#
+#     session['project_videos']  = project_videos
+#     return render_template('projectvideos.html',project_videos=project_videos)
+#
+# @app.route('/projectVideos/', defaults ={'project_id':''})
+# @app.route('/projectVideos/<string:project_id>')
+# def projectVideo(project_id):
+#     for i in session['project_videos']:
+#         if i['id'] == project_id:
+#             current = i
+#     return render_template('showVideos.html',project = i)
 
 
 

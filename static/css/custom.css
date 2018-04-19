@@ -48,6 +48,10 @@
   width: 20%;
   height: 20%;
 }
+.portfolio {
+  margin-top:15px;
+
+}
 
 #myInput {
     background-image: url('/css/searchicon.png'); /* Add a search icon to input */
