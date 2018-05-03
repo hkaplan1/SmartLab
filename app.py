@@ -200,7 +200,7 @@ def materials():
     tags = []
     tagResponse = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Material%2FTechnical%20Tags", headers=headers)
     for k in tagResponse.json()['records']:
-        tags.append(k['fields']['Material Tags'])
+        tags.append((k['fields']['Material Tags'],k['fields']['Material Tags'].replace(" ","")))
 
     #get all materials from airtable
     response = requests.get("https://api.airtable.com/v0/apphVTQe3k0dgvpjV/Material%20Database", headers=headers)
@@ -218,17 +218,15 @@ def materials():
                 for tag in i['fields']['Technical Tags']:
                     for j in tagResponse.json()['records']:
                         if tag == j['id']:
-                            part_tags.append(j['fields']['Material Tags'])
+                            part_tags.append(j['fields']['Material Tags'].replace(" ",""))
                 part_info['tags'] = part_tags
             except:
                 pass
             materials.append(part_info)
         except:
             pass
-
-    print(tags)
     print(materials)
-    return render_template('materials.html',materials=materials)
+    return render_template('materials.html',materials=materials, tags = tags)
 #
 # @app.route('/videoHub')
 # def videoHub():

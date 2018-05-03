@@ -1,0 +1,26 @@
+{
+  "name": "smartlab",
+  "version": "1.0.0",
+  "description": "smartlab website",
+  "main": "app.py",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "isotope-layout": "^3.0.6",
+    "npm": "^5.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "add later"
+  },
+  "keywords": [
+    "smartlab"
+  ],
+  "author": "Harrison Kapla",
+  "license": "MIT"
+}
